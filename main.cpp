@@ -5,6 +5,7 @@
 using namespace std;
 
 void bases();
+int checkBaseNumber(int base);
 bool validateInput(int num, int sourceBase);
 bool validateBinary(int num);
 bool validateOctal(int num);
@@ -15,29 +16,36 @@ int convert_binary_decimal(int num);
 string convert_binary_hexa(int num);
 int convert_octal_binary(int num);
 int convert_octal_decimal(int num);
-int convert_octal_hexa(int num);
+string convert_octal_hexa(int num);
 int convert_decimal_octal(int num);
 int convert_decimal_binary(int num);
-int convert_decimal_hexa(int num);
+string convert_decimal_hexa(int num);
 int convert_hexa_octal(int num);
 int convert_hexa_binary(int num);
 int convert_hexa_decimal(int num);
+
+string conversionNames[5] = {" ", "Binary", "Octal", "Decimal", "Hexadecimal"};
 
 int main()
 {
     int num, sourceBase, targetBase;
     bool validInput = false;
 
+    cout << "------------------------------------------" << endl;
     cout << "Welcome to the Numbering System Converter:" << endl;
-    cout << "This Progrqam will allow you to convert between all the following:" << endl;
+    cout << "------------------------------------------" << endl;
+    cout << "This Program will allow you to convert between all the following:" << endl;
     cout << "Binary--Octal--Decimal--Hexadecimal" << endl;
 
     cout << "\nEnter a valid number to convert:" << endl;
     cin >> num;
 
     cout << "What is the source base? Please enter in valid format: " << endl;
+    cout << "------------------------------------------" << endl;
     bases();
+    cout << "------------------------------------------" << endl;
     cin >> sourceBase;
+    sourceBase = checkBaseNumber(sourceBase);
     validInput = validateInput(num, sourceBase);
 
     while (validInput == false)
@@ -46,50 +54,73 @@ int main()
         cin >> num;
 
         cout << "What is the source base? Please enter in valid format: " << endl;
+        cout << "------------------------------------------" << endl;
         bases();
+        cout << "------------------------------------------" << endl;
         cin >> sourceBase;
+        sourceBase = checkBaseNumber(sourceBase);
         validInput = validateInput(num, sourceBase);
     }
 
     cout << "What is the target base? Please enter in valid format: " << endl;
+    cout << "------------------------------------------" << endl;
     bases();
+    cout << "------------------------------------------" << endl;
     cin >> targetBase;
+    targetBase = checkBaseNumber(targetBase);
+
+    // cout << "For Binary: Select 1" << endl;
+    // cout << "For Octal: Select 2" << endl;
+    // cout << "For Decimal: Select 3" << endl;
+    // cout << "For Hexadecimal: Select 4" << endl;
 
     if (sourceBase == 1 && targetBase == 2)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[1] << " to " << conversionNames[2] << " is: " << convert_binary_octal(num) << endl;
     }
     else if (sourceBase == 1 && targetBase == 3)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[1] << " to " << conversionNames[3] << " is: " << convert_binary_decimal(num) << endl;
     }
     else if (sourceBase == 1 && targetBase == 4)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[1] << " to " << conversionNames[4] << " is: " << convert_binary_hexa(num) << endl;
     }
     else if (sourceBase == 2 && targetBase == 1)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[2] << " to " << conversionNames[1] << " is: " << convert_octal_binary(num) << endl;
     }
     else if (sourceBase == 2 && targetBase == 3)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[2] << " to " << conversionNames[3] << " is: " << convert_octal_decimal(num) << endl;
     }
     else if (sourceBase == 2 && targetBase == 4)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[2] << " to " << conversionNames[4] << " is: " << convert_octal_hexa(num) << endl;
     }
     else if (sourceBase == 3 && targetBase == 1)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[3] << " to " << conversionNames[1] << " is: " << convert_decimal_binary(num) << endl;
     }
     else if (sourceBase == 3 && targetBase == 2)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[3] << " to " << conversionNames[2] << " is: " << convert_decimal_octal(num) << endl;
     }
     else if (sourceBase == 3 && targetBase == 4)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[3] << " to " << conversionNames[4] << " is: " << convert_decimal_hexa(num) << endl;
     }
     else if (sourceBase == 4 && targetBase == 1)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[4] << " to " << conversionNames[1] << " is: " << convert_hexa_binary(num) << endl;
     }
     else if (sourceBase == 4 && targetBase == 2)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[4] << " to " << conversionNames[2] << " is: " << convert_hexa_octal(num) << endl;
     }
     else if (sourceBase == 4 && targetBase == 3)
     {
+        cout << "Conversion of " << num << " from " << conversionNames[4] << " to " << conversionNames[3] << " is: " << convert_hexa_decimal(num) << endl;
     }
     else
     {
@@ -103,6 +134,19 @@ void bases()
     cout << "For Octal: Select 2" << endl;
     cout << "For Decimal: Select 3" << endl;
     cout << "For Hexadecimal: Select 4" << endl;
+}
+
+int checkBaseNumber(int base)
+{
+    while (base < 1 || base > 4)
+    {
+        cout << "Please choose an option between 1 and 2 " << endl;
+        cout << "------------------------------------------" << endl;
+        bases();
+        cout << "------------------------------------------" << endl;
+        cin >> base;
+    }
+    return base;
 }
 
 //   VALIDATE SOURCE BASE INPUT FUNCTIONS---------------------
@@ -267,24 +311,79 @@ int convert_octal_decimal(int num)
     }
     return decimal;
 }
-// int convert_octal_hexa(int num)
-// {
-// }
-// int convert_decimal_octal(int num)
-// {
-// }
-// int convert_decimal_binary(int num)
-// {
-// }
-// int convert_decimal_hexa(int num)
-// {
-// }
-// int convert_hexa_octal(int num)
-// {
-// }
-// int convert_hexa_binary(int num)
-// {
-// }
-// int convert_hexa_decimal(int num)
-// {
-// }
+string convert_octal_hexa(int num)
+{
+    int binary;
+    string hexa;
+
+    binary = convert_octal_binary(num);
+    hexa = convert_binary_hexa(binary);
+
+    return hexa;
+}
+int convert_decimal_octal(int num)
+{
+    int rem, i = 1, octal = 0;
+    while (num != 0)
+    {
+        rem = num % 8;
+        num /= 8;
+        octal += rem * i;
+        i *= 10;
+    }
+    return octal;
+}
+int convert_decimal_binary(int num)
+{
+    int octal, binary;
+
+    octal = convert_decimal_octal(num);
+    binary = convert_octal_binary(octal);
+
+    return binary;
+}
+string convert_decimal_hexa(int num)
+{
+    int binary;
+    string hexa;
+
+    binary = convert_decimal_binary(num);
+    hexa = convert_binary_hexa(binary);
+
+    return hexa;
+}
+int convert_hexa_octal(int num)
+{
+    // int i, len, deci = 0, oct = 0;
+    // for (len = 0; hexa[len] != '\0'; len++)
+    //     ;
+    // for (i = 0; hexa[i] != '\0'; i++, len--)
+    // {
+    //     (hexa[i] >= '0' && hexa[i] <= '9');
+    //     {
+    //         deci = deci + (hexa[i] - '0') * pow(16, len - 1);
+    //     }
+    //     if (hexa[i] >= 'A' && hexa[i] <= 'F')
+    //     {
+    //         deci = deci + (hexa[i] - 55) * pow(16, len - 1);
+    //     }
+    //     if (hexa[i] >= 'a' && hexa[i] <= 'f')
+    //     {
+    //         deci = deci + (hexa[i] - 87) * pow(16, len - 1);
+    //     }
+    // } // Now, variable deci contains the decimal value of given hexadecimal number.
+    // i = 1;
+    // while (deci != 0)
+    // {
+    //     oct = oct + (deci % 8) * i;
+    //     deci = deci / 8;
+    //     i = i * 10;
+    // }
+    // return oct;
+}
+int convert_hexa_binary(int num)
+{
+}
+int convert_hexa_decimal(int num)
+{
+}
