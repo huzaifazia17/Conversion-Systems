@@ -1,17 +1,24 @@
+// Assignment 1- Infomration Technology
+// Huzaifa Zia
+// Hanzalah Patel
+// Zubair Islam
+
 #include <iostream>
 #include <math.h>
 #include <string>
 #include <stdlib.h>
+#include <sstream>
 
 using namespace std;
 
+// Function Prototypes
 void bases();
 int checkBaseNumber(int base);
-bool validateInput(int num, int sourceBase);
+bool validateInput(int num, int sourceBase, string read);
 bool validateBinary(int num);
 bool validateOctal(int num);
 bool validateDecimal(int num);
-bool validateHexaDecimal(int num);
+bool validateHexaDecimal(string read);
 int convert_binary_octal(int num);
 int convert_binary_decimal(int num);
 string convert_binary_hexa(int num);
@@ -21,9 +28,9 @@ string convert_octal_hexa(int num);
 int convert_decimal_octal(int num);
 int convert_decimal_binary(int num);
 string convert_decimal_hexa(int num);
-int convert_hexa_octal(int num);
-int convert_hexa_binary(int num);
-int convert_hexa_decimal(int num);
+int convert_hexa_octal(string hexa);
+int convert_hexa_binary(string hexa);
+int convert_hexa_decimal(string hexVal);
 
 string conversionNames[5] = {" ", "Binary", "Octal", "Decimal", "Hexadecimal"};
 
@@ -32,9 +39,12 @@ int main()
     int num, sourceBase, targetBase;
     bool validInput = false;
     string again;
+    string read;
 
+    // do while user still wants to convert
     do
     {
+        // Introduction statements
         cout << "------------------------------------------" << endl;
         cout << "Welcome to the Numbering System Converter:" << endl;
         cout << "------------------------------------------" << endl;
@@ -42,28 +52,31 @@ int main()
         cout << "Binary--Octal--Decimal--Hexadecimal" << endl;
 
         cout << "\nEnter a valid number to convert:" << endl;
-        cin >> num;
+        cin >> read;                 // reads a string value
+        stringstream readHexa(read); // Converts string to integer
+        readHexa >> num;             // stores int value to num
 
         cout << "What is the source base? Please enter in valid format: " << endl;
         cout << "------------------------------------------" << endl;
         bases();
         cout << "------------------------------------------" << endl;
         cin >> sourceBase;
-        sourceBase = checkBaseNumber(sourceBase);
-        validInput = validateInput(num, sourceBase);
+        sourceBase = checkBaseNumber(sourceBase);          // check if source base number is between 1-4
+        validInput = validateInput(num, sourceBase, read); // validate input according to base
 
+        // If input does not match base ask user for number and source base again
         while (validInput == false)
         {
             cout << "\nEnter a valid number to convert that corresponds with the Base: \nYou will be asked to choose the base again so you may change your number: " << endl;
             cin >> num;
 
-            cout << "Enter the source base again? Please enter in valid format: " << endl;
+            cout << "Enter the source base again. Please enter in valid format: " << endl;
             cout << "------------------------------------------" << endl;
             bases();
             cout << "------------------------------------------" << endl;
             cin >> sourceBase;
             sourceBase = checkBaseNumber(sourceBase);
-            validInput = validateInput(num, sourceBase);
+            validInput = validateInput(num, sourceBase, read);
         }
 
         cout << "What is the target base? Please enter in valid format: " << endl;
@@ -73,6 +86,7 @@ int main()
         cin >> targetBase;
         targetBase = checkBaseNumber(targetBase);
 
+        // OUTPUT conversions
         if (sourceBase == 1 && targetBase == 2)
         {
             cout << "Conversion of " << num << " from " << conversionNames[1] << " to " << conversionNames[2] << " is: " << convert_binary_octal(num) << endl;
@@ -111,15 +125,15 @@ int main()
         }
         else if (sourceBase == 4 && targetBase == 1)
         {
-            cout << "Conversion of " << num << " from " << conversionNames[4] << " to " << conversionNames[1] << " is: " << convert_hexa_binary(num) << endl;
+            cout << "Conversion of " << read << " from " << conversionNames[4] << " to " << conversionNames[1] << " is: " << convert_hexa_binary(read) << endl;
         }
         else if (sourceBase == 4 && targetBase == 2)
         {
-            cout << "Conversion of " << num << " from " << conversionNames[4] << " to " << conversionNames[2] << " is: " << convert_hexa_octal(num) << endl;
+            cout << "Conversion of " << read << " from " << conversionNames[4] << " to " << conversionNames[2] << " is: " << convert_hexa_octal(read) << endl;
         }
         else if (sourceBase == 4 && targetBase == 3)
         {
-            cout << "Conversion of " << num << " from " << conversionNames[4] << " to " << conversionNames[3] << " is: " << convert_hexa_decimal(num) << endl;
+            cout << "Conversion of " << read << " from " << conversionNames[4] << " to " << conversionNames[3] << " is: " << convert_hexa_decimal(read) << endl;
         }
         else
         {
@@ -155,7 +169,7 @@ int checkBaseNumber(int base)
 
 //   VALIDATE SOURCE BASE INPUT FUNCTIONS---------------------
 
-bool validateInput(int num, int sourceBase)
+bool validateInput(int num, int sourceBase, string read)
 {
     bool test;
 
@@ -176,7 +190,7 @@ bool validateInput(int num, int sourceBase)
     }
     else if (sourceBase == 4)
     {
-        test = validateHexaDecimal(num);
+        test = validateHexaDecimal(read);
         return test;
     }
     return false;
@@ -236,8 +250,21 @@ bool validateDecimal(int num)
 
     return true;
 }
-bool validateHexaDecimal(int num)
+bool validateHexaDecimal(string read)
 {
+    int length = read.length();
+
+    for (int i = 0; i < length; i++)
+    {
+        char ch = read[i];
+
+        if ((ch < '0' || ch > '9') &&
+            (ch < 'A' || ch > 'F'))
+        {
+            return false;
+        }
+    }
+
     return true;
 }
 
@@ -273,8 +300,8 @@ int convert_binary_decimal(int num)
     while (num != 0)
     {
         rem = num % 10;
-        int res = rem * pow(2, i);
-        decimal += res;
+        int r = rem * pow(2, i);
+        decimal += r;
         i++;
         num /= 10;
     }
@@ -283,39 +310,39 @@ int convert_binary_decimal(int num)
 }
 string convert_binary_hexa(int num)
 {
-    int hex = 0, mul = 1, chk = 1, i = 0, rem;
-    char hexaDecNum[20];
+    int hex = 0, test = 1, check = 1, i = 0, rem;
+    char hexNum[20];
     string output;
 
     while (num != 0)
     {
         rem = num % 10;
-        hex = hex + (rem * mul);
-        if (chk % 4 == 0)
+        hex = hex + (rem * test);
+        if (check % 4 == 0)
         {
             if (hex < 10)
-                hexaDecNum[i] = hex + 48;
+                hexNum[i] = hex + 48;
             else
-                hexaDecNum[i] = hex + 55;
-            mul = 1;
+                hexNum[i] = hex + 55;
+            test = 1;
             hex = 0;
-            chk = 1;
+            check = 1;
             i++;
         }
         else
         {
-            mul = mul * 2;
-            chk++;
+            test = test * 2;
+            check++;
         }
         num = num / 10;
     }
-    if (chk != 1)
-        hexaDecNum[i] = hex + 48;
-    if (chk == 1)
+    if (check != 1)
+        hexNum[i] = hex + 48;
+    if (check == 1)
         i--;
     for (i = i; i >= 0; i--)
     {
-        char test = hexaDecNum[i];
+        char test = hexNum[i];
         output += test;
     }
 
@@ -382,11 +409,15 @@ int convert_decimal_octal(int num)
 }
 int convert_decimal_binary(int num)
 {
-    int octal, binary;
-
-    octal = convert_decimal_octal(num);
-    binary = convert_octal_binary(octal);
-
+    int binary, i = 1;
+    //converting decimal to binary
+    while (num != 0)
+    {
+        int rem = num % 2;
+        binary += rem * i;
+        num /= 2;
+        i *= 10;
+    }
     return binary;
 }
 string convert_decimal_hexa(int num)
@@ -399,38 +430,89 @@ string convert_decimal_hexa(int num)
 
     return hexa;
 }
-int convert_hexa_octal(int num)
+int convert_hexa_octal(string hexa)
 {
-    // int i, len, deci = 0, oct = 0;
-    // for (len = 0; hexa[len] != '\0'; len++)
-    //     ;
-    // for (i = 0; hexa[i] != '\0'; i++, len--)
-    // {
-    //     (hexa[i] >= '0' && hexa[i] <= '9');
-    //     {
-    //         deci = deci + (hexa[i] - '0') * pow(16, len - 1);
-    //     }
-    //     if (hexa[i] >= 'A' && hexa[i] <= 'F')
-    //     {
-    //         deci = deci + (hexa[i] - 55) * pow(16, len - 1);
-    //     }
-    //     if (hexa[i] >= 'a' && hexa[i] <= 'f')
-    //     {
-    //         deci = deci + (hexa[i] - 87) * pow(16, len - 1);
-    //     }
-    // } // Now, variable deci contains the decimal value of given hexadecimal number.
-    // i = 1;
-    // while (deci != 0)
-    // {
-    //     oct = oct + (deci % 8) * i;
-    //     deci = deci / 8;
-    //     i = i * 10;
-    // }
-    // return oct;
+    int octal;
+    int length = hexa.size();
+    int base = 1;
+    int decimal = 0;
+
+    // Extract char from hexadecimal value
+    for (int i = length - 1; i >= 0; i--)
+    {
+        // if char is between 0-9, convert to int using ascii table subtraction value (48)
+        if (hexa[i] >= '0' && hexa[i] <= '9')
+        {
+            decimal += (int(hexa[i]) - 48) * base;
+            // incrementing the base by power
+            base = base * 16;
+        }
+
+        // if char is between A-F, convert to int between 10-15 using ascii table subtraction value (55)
+        else if (hexa[i] >= 'A' && hexa[i] <= 'F')
+        {
+            decimal += (int(hexa[i]) - 55) * base;
+            base = base * 16;
+        }
+    }
+    // convert decimal int to octal and return
+    octal = convert_decimal_octal(decimal);
+
+    return octal;
 }
-int convert_hexa_binary(int num)
+int convert_hexa_binary(string hexa)
 {
+    int binary;
+    int length = hexa.size();
+    int base = 1;
+    int decimal = 0;
+
+    // Extract char from hexadecimal value
+    for (int i = length - 1; i >= 0; i--)
+    {
+        // if char is between 0-9, convert to int using ascii table subtraction value (48)
+        if (hexa[i] >= '0' && hexa[i] <= '9')
+        {
+            decimal += (int(hexa[i]) - 48) * base;
+            // incrementing the base by power
+            base = base * 16;
+        }
+
+        // if char is between A-F, convert to int between 10-15 using ascii table subtraction value (55)
+        else if (hexa[i] >= 'A' && hexa[i] <= 'F')
+        {
+            decimal += (int(hexa[i]) - 55) * base;
+            base = base * 16;
+        }
+    }
+    // convert decimal int to binary and return
+    binary = convert_decimal_binary(decimal);
+
+    return binary;
 }
-int convert_hexa_decimal(int num)
+int convert_hexa_decimal(string hexa)
 {
+    int length = hexa.size();
+    int base = 1;
+    int decimal = 0;
+
+    // Extract char from hexadecimal value
+    for (int i = length - 1; i >= 0; i--)
+    {
+        // if char is between 0-9, convert to int using ascii table subtraction value (48)
+        if (hexa[i] >= '0' && hexa[i] <= '9')
+        {
+            decimal += (int(hexa[i]) - 48) * base;
+            // incrementing the base by power
+            base = base * 16;
+        }
+
+        // if char is between A-F, convert to int between 10-15 using ascii table subtraction value (55)
+        else if (hexa[i] >= 'A' && hexa[i] <= 'F')
+        {
+            decimal += (int(hexa[i]) - 55) * base;
+            base = base * 16;
+        }
+    }
+    return decimal;
 }
