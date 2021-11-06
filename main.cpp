@@ -40,6 +40,7 @@ int main()
     bool validInput = false;
     string again;
     string read;
+    string test;
 
     // do while user still wants to convert
     do
