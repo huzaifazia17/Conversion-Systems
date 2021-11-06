@@ -40,12 +40,14 @@ int main()
     bool validInput = false;
     string again;
     string read;
-    string test;
+    string test2;
+    string magenta;
 
     // do while user still wants to convert
     do
     {
         // Introduction statements
+        cout << "------------------------------------------" << endl;
         cout << "------------------------------------------" << endl;
         cout << "Welcome to the Numbering System Converter:" << endl;
         cout << "------------------------------------------" << endl;
